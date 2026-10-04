@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d121a">
+  <meta name="description" content="Measured learning across seven original game environments in LucidAI Evolution.">
+  <title>LucidAI Evolution · Game Learning Lab</title>
+  <link rel="stylesheet" href="./style.css">
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="./"><span class="brand-icon">◈</span><span>lucid<span class="accent">.</span><small>EVOLUTION LAB</small></span></a>
+    <p class="eyebrow">ENVIRONMENTS</p>
+    <nav id="games" aria-label="Games"></nav>
+    <div class="sidebar-bottom"><span class="status-dot"></span> Published experiment results<br><small>Seven games · 12 measured runs</small></div>
+  </aside>
+  <main>
+    <header>
+      <div><p class="eyebrow">YOUR AI. ITS NEXT MOVE.</p><h1>Evolution laboratory</h1><p class="subtitle">Explore real results from agents trained on the Fedora host.</p></div>
+      <span class="badge">RESULTS EDITION</span>
+    </header>
+    <section class="hero panel">
+      <div><p class="eyebrow">SELECTED ENVIRONMENT</p><h2 id="game-name">Snake</h2><p id="description"></p></div>
+      <div class="hero-actions"><a class="primary" href="http://127.0.0.1:8770/" target="_blank" rel="noopener">Open live lab on host ↗</a><small>Training controls work on the Fedora laptop or through a trusted port forward.</small></div>
+    </section>
+    <div class="metrics">
+      <article class="panel"><span>BEST TRAINED SCORE</span><strong id="trained">—</strong><small id="trained-note"></small></article>
+      <article class="panel"><span>INITIAL POLICY</span><strong id="initial">—</strong><small>Same model before training</small></article>
+      <article class="panel"><span>RANDOM POLICY</span><strong id="random">—</strong><small>50 evaluation episodes</small></article>
+      <article class="panel"><span>TRAINING RUNS</span><strong id="run-count">—</strong><small>Measured on CPU</small></article>
+    </div>
+    <div class="columns">
+      <section class="panel plot-panel"><div class="panel-heading"><div><p class="eyebrow">EVALUATION</p><h3>How the policies scored</h3></div><span class="muted">Higher is better</span></div><div id="chart" class="chart" role="img" aria-label="Policy score comparison"></div><p class="muted note" id="chart-note"></p></section>
+      <section class="panel"><div class="panel-heading"><div><p class="eyebrow">GAME CARD</p><h3>What the agent learns</h3></div><span id="game-icon" class="game-icon"></span></div><div class="card-row"><span>Task</span><strong id="task"></strong></div><div class="card-row"><span>Learning method</span><strong id="method"></strong></div><div class="card-row"><span>Score unit</span><strong id="unit"></strong></div><div class="card-row"><span>Observed outcome</span><strong id="outcome"></strong></div><p class="muted note" id="caveat"></p></section>
+    </div>
+    <section class="panel runs-panel"><div class="panel-heading"><div><p class="eyebrow">RAW EXPERIMENTS</p><h3>All runs for this game</h3></div><span class="muted">50 held-out episodes per policy</span></div><div class="table-wrap"><table><thead><tr><th>Run</th><th>Random</th><th>Initial</th><th>Trained</th><th>Finding</th><th>Data</th></tr></thead><tbody id="runs"></tbody></table></div></section>
+    <footer>Scores come from actual saved evaluation reports; this page does not simulate training. <a href="https://github.com/Lucidiscool/LucidAI-Evolution">Private source repository</a> · <a href="https://lucidiscool.github.io/Lucid-AI-Public/">LucidAI chat</a></footer>
+  </main>
+</body>
+</html>
