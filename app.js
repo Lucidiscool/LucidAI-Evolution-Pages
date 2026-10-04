@@ -17,6 +17,7 @@ function render() {
   document.querySelectorAll('nav button').forEach(b => {b.classList.toggle('active',b.dataset.game === selected);b.setAttribute('aria-current',b.dataset.game === selected ? 'page' : 'false')});
   $('game-name').textContent = info.name; $('description').textContent = info.description; $('game-icon').textContent = info.icon;
   $('task').textContent = info.task; $('method').textContent = info.method; $('unit').textContent = info.unit; $('caveat').textContent = info.caveat;
+  $('outcome').textContent = runs.length ? `${runs.filter(r => r.trained.mean_score > Math.max(r.baseline.mean_score,r.untrained.mean_score)).length} of ${runs.length} runs beat both baselines` : 'No data';
   $('run-count').textContent = runs.length; $('trained').textContent = best ? num(best.trained.mean_score) : '—';
   $('initial').textContent = best ? num(best.untrained.mean_score) : '—'; $('random').textContent = best ? num(best.baseline.mean_score) : '—';
   $('trained-note').textContent = best ? `Best measured run · ${best.file}` : '';
