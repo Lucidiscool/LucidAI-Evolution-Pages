@@ -5,7 +5,7 @@
   const form = document.getElementById('remote-login');
   const submit = document.getElementById('remote-submit');
   const passcode = document.getElementById('remote-passcode');
-  let base = '', token = '', firstLogin;
+  let base = '', token = '', firstLogin, everSignedIn = false;
   const ready = new Promise(resolve => { firstLogin = resolve; });
 
   async function findHost() {
@@ -36,6 +36,7 @@
       passcode.value = '';
       if (!response.ok) throw Error(result.error || 'Could not sign in.');
       token = result.token;
+      everSignedIn = true;
       auth.hidden = true;
       firstLogin();
       status.textContent = 'Connected';
@@ -47,7 +48,10 @@
 
   window.evolutionRemote = {
     async request(path, body) {
-      if (!token) await ready;
+      if (!token) {
+        if (everSignedIn) throw Error('Sign in again to use the lab.');
+        await ready;
+      }
       const response = await fetch(base + '/api/evolution/' + path, {
         method:body === undefined ? 'GET' : 'POST',
         headers:{'Content-Type':'application/json','X-Lucid-Admin':token},
