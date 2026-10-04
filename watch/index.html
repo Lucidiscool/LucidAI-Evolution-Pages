@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Watch LucidAI Evolution learn and play on the Fedora laptop.">
+  <title>Watch live · LucidAI Evolution</title>
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="./watch.css">
+  <script defer src="./app.js"></script>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="../"><span class="brand-icon">◈</span><span>lucid<span class="accent">.</span><small>EVOLUTION LAB</small></span></a>
+    <p class="eyebrow">WATCH FROM ANYWHERE</p>
+    <nav><a href="../">Measured results</a><a class="active" href="./">Watch live</a><a href="../lab/">Play & train</a></nav>
+    <div class="sidebar-bottom"><span class="status-dot"></span> Read-only game feed<br><small>Python runs on the Fedora laptop</small></div>
+  </aside>
+  <main>
+    <header><div><p class="eyebrow">FEDORA GAME FEED</p><h1>Watch it learn</h1><p class="subtitle">Real frames and training scores from the laptop. No login needed to watch.</p></div><span class="badge" id="connection" aria-live="polite">CONNECTING</span></header>
+    <section class="panel session-toolbar"><div><p class="eyebrow">TRAINING SESSION</p><h2 id="game-title">Waiting for a session</h2><p id="feed-status" class="muted">Connecting to the Fedora laptop…</p></div><label for="session-select">Choose a session<select id="session-select"><option value="">No sessions yet</option></select></label></section>
+    <div class="metrics"><article class="panel"><span>EPISODE</span><strong id="episode">—</strong><small id="mode">Waiting for data</small></article><article class="panel"><span>CURRENT REWARD</span><strong id="reward">—</strong><small>Actual training reward</small></article><article class="panel"><span>AVERAGE REWARD</span><strong id="average">—</strong><small>Last 100 episodes</small></article><article class="panel"><span>BEST SCORE</span><strong id="best">—</strong><small>Game score</small></article></div>
+    <section class="panel live-panel"><div class="panel-heading"><div><p class="eyebrow">GAME VIEW</p><h3 id="view-title">Live environment</h3></div><span class="muted" id="frame-caption">Waiting for real gameplay</span></div><div class="canvas-holder"><canvas id="game" width="720" height="460" aria-label="Live game view"></canvas><div id="empty"><span>◈</span><h3>Nothing to show yet</h3><p>Start a Live training session in the lab to see the game here.</p></div></div></section>
+    <section class="panel curve-panel"><div class="panel-heading"><div><p class="eyebrow">MEASURED PROGRESS</p><h3>Learning curve</h3></div><span class="muted" id="chart-note">Waiting for episodes</span></div><canvas id="chart" width="900" height="220" aria-label="Training reward curve"></canvas></section>
+    <footer>Frames are from the laptop’s training worker or its last recorded replay. <a href="../lab/">Open the signed-in lab to play or train ↗</a></footer>
+  </main>
+</body>
+</html>
