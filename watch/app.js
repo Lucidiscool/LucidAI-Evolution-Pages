@@ -3,7 +3,7 @@ const $ = id => document.getElementById(id);
 const labels = {snake:'Snake',pong:'Pong',flappy:'Skywing',tetris:'Tetris',racing:'Circuit',platformer:'Checkpoint',chess:'Chess'};
 const canvas = $('game'), ctx = canvas.getContext('2d');
 const n = (value,digits=1) => value == null ? '—' : Number(value).toFixed(digits);
-let base = '', session = null, mode = 'live', replayFrames = [], replayIndex = 0, replayLoaded = '';
+let base = '', session = 'snake', mode = 'live', replayFrames = [], replayIndex = 0, replayLoaded = '';
 
 async function connect() {
   const response = await fetch('https://lucidiscool.github.io/Lucid-AI-Public/backend.json?ts=' + Date.now(), {cache:'no-store'});
@@ -18,7 +18,7 @@ async function connect() {
 }
 
 async function watch(path='') {
-  const response = await fetch(base + '/api/evolution/watch' + path, {cache:'no-store',signal:AbortSignal.timeout(15000)});
+  const response = await fetch(base + '/api/evolution/portfolio' + path, {cache:'no-store',signal:AbortSignal.timeout(15000)});
   const result = await response.json();
   if (!response.ok) throw Error(result.error || 'The game feed is unavailable.');
   return result;
@@ -30,23 +30,23 @@ function status(message, online) {
 }
 
 async function loadSessions() {
-  const sessions = await watch();
-  const previous = session;
-  $('session-select').replaceChildren();
-  if (!sessions.length) {
-    $('session-select').add(new Option('No sessions yet',''));
-    session = null;
-    replayFrames = [];
-    draw(null);
-    status('The laptop is online. No training session is open right now.',true);
-    return;
+  const games = await watch();
+  const grid = $('game-grid');
+  grid.replaceChildren();
+  for (const item of games) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'game-card' + (item.game === session ? ' selected' : '');
+    const title = document.createElement('strong');
+    title.textContent = labels[item.game] || item.game;
+    const state = document.createElement('span');
+    state.textContent = `${item.status} · episode ${item.episode ?? 0}`;
+    const backup = document.createElement('small');
+    backup.textContent = `Private backup: ${item.backup || 'pending'}`;
+    button.append(title, state, backup);
+    button.onclick = () => {session=item.game;replayFrames=[];replayLoaded='';loadSessions();loadState().catch(error=>status(error.message,false))};
+    grid.append(button);
   }
-  for (const item of sessions) $('session-select').add(new Option(`${labels[item.game] || item.game} · ${item.status} · ${item.id.slice(0,5)}`,item.id));
-  if (!sessions.some(item => item.id === previous)) {
-    session = (sessions.find(item => item.status === 'running') || sessions.at(-1)).id;
-    replayFrames = []; replayLoaded = '';
-  }
-  $('session-select').value = session;
 }
 
 function curve(history) {
@@ -71,7 +71,7 @@ async function loadState() {
   $('reward').textContent = n(state.reward);
   $('average').textContent = n(state.average_reward);
   $('best').textContent = n(state.best_score);
-  $('mode').textContent = `${state.status} · ${state.mode} mode`;
+  $('mode').textContent = `${state.status} · backup ${state.backup || 'pending'}`;
   $('view-title').textContent = state.status === 'running' ? 'Live environment' : 'Recorded game';
   curve(state.history || []);
   if (state.status === 'running' && state.frame) {
@@ -79,16 +79,16 @@ async function loadState() {
     status(`Watching ${labels[state.game]} as the agent trains on Fedora.`,true);
   } else if (state.status === 'running') {
     replayFrames=[];draw(null);
-    status('Training is running in Fast mode. Scores update live; switch to Live mode in the signed-in lab for frames.',true);
+    status('Training is running. Waiting for a game frame.',true);
   } else {
-    if (replayLoaded !== session) {
+    if (replayLoaded !== state.save_id) {
       const replay = await watch('/' + session + '/replay');
       replayFrames = replay.frames || [];
       replayIndex = 0;
-      replayLoaded = session;
+      replayLoaded = state.save_id;
     }
     if (!replayFrames.length) draw(state.frame);
-    status(replayFrames.length ? `Replaying a real ${labels[state.game]} episode. The training session is ${state.status}.` : `Training session ${state.status}; no replay was recorded.`,true);
+    status(replayFrames.length ? `Replaying a real ${labels[state.game]} episode. Training rotates through all seven games.` : `${labels[state.game]} is queued for its next training turn.`,true);
   }
 }
 
@@ -234,7 +234,6 @@ function draw(f) {
 }
 
 
-$('session-select').onchange = () => {session=$('session-select').value||null;replayFrames=[];replayLoaded='';loadState().catch(error=>status(error.message,false))};
 setInterval(()=>{if(replayFrames.length)draw(replayFrames[replayIndex++%replayFrames.length])},120);
 setInterval(()=>loadState().catch(error=>status(error.message,false)),1200);
 setInterval(()=>loadSessions().catch(error=>status(error.message,false)),6000);
